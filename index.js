@@ -129,10 +129,9 @@ webix.protoUI({
                     value: "Save",
                     css: "webix_primary",
                     click: ()=> {
-                        const formId = this;
-                        if (formId.isDirty()) {
-                            console.log(formId.getValues())
-                            formId.clear();
+                        if (this.isDirty()) {
+                            console.log(this.getValues())
+                            this.clear();
                         }
                     }
                 },
