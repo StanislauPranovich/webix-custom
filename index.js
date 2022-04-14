@@ -85,27 +85,6 @@ const firstTask = {
                     }
                 }
             },
-            {
-                view: "mybutton",
-                width: 270,
-                states: { 0: "Off", 1: "Sort Asc", 2: "Sort Desc" },
-                state: 0,
-                on: {
-                    "onItemClick"() {
-                        switch (this.config.state) {
-                            case 0:
-                                sortData("#id#", "asc", "int");
-                                break;
-                            case 1:
-                                sortData("#name#", "asc", "string");
-                                break;
-                            case 2:
-                                sortData("#name#", "desc", "string");
-                                break;
-                        }
-                    }
-                }
-            },
             ],
             margin: 50,
             padding: 10
@@ -149,7 +128,6 @@ webix.protoUI({
                 css: "webix_primary",
                 click() {
                     if($$(config.id).isDirty()) {
-                        console.log($$(config.id).getValues());
                         $$(config.id).clear();
                     }
                 }
