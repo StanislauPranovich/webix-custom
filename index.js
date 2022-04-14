@@ -105,7 +105,7 @@ const firstTask = {
 }
 
 webix.protoUI({
-    name: "customForm",
+    name: "generateFormFields",
     $init(config) {
         for (let i = 0; i < config.fields.length; i++) {
             config.rows.push({
@@ -128,8 +128,8 @@ webix.protoUI({
                     view: "button",
                     value: "Save",
                     css: "webix_primary",
-                    click() {
-                        const formId = $$(config.id);
+                    click: ()=> {
+                        const formId = this;
                         if (formId.isDirty()) {
                             console.log(formId.getValues())
                             formId.clear();
@@ -145,7 +145,7 @@ webix.protoUI({
 const secondTask = {
     rows: [
         {
-            view: "customForm",
+            view: "generateFormFields",
             fields: ["Firstname", "Lastname", "Address"],
             autowidth: true,
             rows: [],
