@@ -1,23 +1,16 @@
-.button_off .webix_button{
+.button_off .webix_button,
+.button_off .webix_button:hover {
     background-color: green;
     color: black
 }
-.button_off .webix_button:hover{
-    background-color: green;
-    color: black
-}
-.button_sort_asc .webix_button {
-    background-color: orange;
-    color: black
-}
+
+.button_sort_asc .webix_button,
 .button_sort_asc .webix_button:hover {
     background-color: orange;
     color: black
 }
-.button_sort_desc .webix_button {
-    background-color: red;
-    color: black
-}
+
+.button_sort_desc .webix_button,
 .button_sort_desc .webix_button:hover {
     background-color: red;
     color: black

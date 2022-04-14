@@ -17,8 +17,8 @@ function changeBtnState(state, addClass, removeClass, id) {
     const btn = $$(id);
     btn.config.state = state;
     const btnNode = btn.getNode();
-    webix.html.addCss(btnNode, `${"button_" + addClass}`);
-    webix.html.removeCss(btnNode, `${"button_" + removeClass}`);
+    webix.html.addCss(btnNode, `button_${addClass}`);
+    webix.html.removeCss(btnNode, `button_${removeClass}`);
     btn.blur();
     return btn.setValue(btn.config.states[btn.config.state]);
 }
@@ -28,7 +28,7 @@ function sortDataInTable(key, dir, type) {
 }
 
 webix.protoUI({
-    name: 'customButton',
+    name: 'buttonStates',
     $init(config) {
         config.value = config.states[config.state];
         this.$view.className += " button_off";
@@ -66,7 +66,7 @@ const firstTask = {
                 autowidth: true
             },
             {
-                view: "customButton",
+                view: "buttonStates",
                 width: 270,
                 states: { 0: "Off", 1: "Sort Asc", 2: "Sort Desc" },
                 state: 0,
@@ -108,30 +108,36 @@ webix.protoUI({
     name: "customForm",
     $init(config) {
         for (let i = 0; i < config.fields.length; i++) {
-            config.rows.push({view: "text", label: config.fields[i], name: config.fields[i]});
+            config.rows.push({
+                view: "text",
+                label: config.fields[i],
+                name: config.fields[i]
+            });
         };
-        config.rows.push({cols: [
-            {
-                view: "button",
-                value: "Cancel",
-                click() {
-                    $$(config.id).clear();
-                    return false;
-                }
-            },
-            {
-                view: "button",
-                value: "Save",
-                css: "webix_primary",
-                click() {
-                    const formId = $$(config.id);
-                    if(formId.isDirty()) {
-                        console.log(formId.getValues())
-                        formId.clear();
+        config.rows.push({
+            cols: [
+                {
+                    view: "button",
+                    value: "Cancel",
+                    click: () => {
+                        this.clear();
+                        return false;
                     }
-                }
-            },
-        ]})
+                },
+                {
+                    view: "button",
+                    value: "Save",
+                    css: "webix_primary",
+                    click() {
+                        const formId = $$(config.id);
+                        if (formId.isDirty()) {
+                            console.log(formId.getValues())
+                            formId.clear();
+                        }
+                    }
+                },
+            ]
+        })
     }
 
 }, webix.ui.form)
@@ -140,7 +146,7 @@ const secondTask = {
     rows: [
         {
             view: "customForm",
-            fields: ["Firstname","Lastname", "Address"],
+            fields: ["Firstname", "Lastname", "Address"],
             autowidth: true,
             rows: [],
         },
