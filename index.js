@@ -13,34 +13,35 @@ const data = [
     { "id": 12, "name": "Tanya Krieg", "age": 28, "country": "Germany" }
 ]
 
-function btnChange(state, addClass, removeClass, id) {
-    const myBtn = $$(id);
-    myBtn.config.state = state;
-    webix.html.addCss(myBtn.getNode(), "button_" + addClass);
-    webix.html.removeCss(myBtn.getNode(), "button_" + removeClass);
-    myBtn.blur();
-    return myBtn.setValue(myBtn.config.states[myBtn.config.state]);
+function changeBtnState(state, addClass, removeClass, id) {
+    const btn = $$(id);
+    btn.config.state = state;
+    const btnNode = btn.getNode();
+    webix.html.addCss(btnNode, `${"button_" + addClass}`);
+    webix.html.removeCss(btnNode, `${"button_" + removeClass}`);
+    btn.blur();
+    return btn.setValue(btn.config.states[btn.config.state]);
 }
 
-function sortData(key, dir, type) {
+function sortDataInTable(key, dir, type) {
     return $$("table").sort(key, dir, type);
 }
 
 webix.protoUI({
-    name: 'mybutton',
+    name: 'customButton',
     $init(config) {
         config.value = config.states[config.state];
         this.$view.className += " button_off";
         this.attachEvent("onItemClick", () => {
             switch (this.config.state) {
                 case 0:
-                    btnChange(1, "sort_asc", "off", this.config.id);
+                    changeBtnState(1, "sort_asc", "off", this.config.id);
                     break;
                 case 1:
-                    btnChange(2, "sort_desc", "sort_asc", this.config.id);
+                    changeBtnState(2, "sort_desc", "sort_asc", this.config.id);
                     break;
                 case 2:
-                    btnChange(0, "off", "sort_desc", this.config.id);
+                    changeBtnState(0, "off", "sort_desc", this.config.id);
                     break;
             }
         })
@@ -65,21 +66,21 @@ const firstTask = {
                 autowidth: true
             },
             {
-                view: "mybutton",
+                view: "customButton",
                 width: 270,
                 states: { 0: "Off", 1: "Sort Asc", 2: "Sort Desc" },
                 state: 0,
                 on: {
-                    "onItemClick"() {
+                    onItemClick() {
                         switch (this.config.state) {
                             case 0:
-                                sortData("#id#", "asc", "int");
+                                sortDataInTable("#id#", "asc", "int");
                                 break;
                             case 1:
-                                sortData("#name#", "asc", "string");
+                                sortDataInTable("#name#", "asc", "string");
                                 break;
                             case 2:
-                                sortData("#name#", "desc", "string");
+                                sortDataInTable("#name#", "desc", "string");
                                 break;
                         }
                     }
@@ -104,14 +105,10 @@ const firstTask = {
 }
 
 webix.protoUI({
-    name: "myform",
+    name: "customForm",
     $init(config) {
         for (let i = 0; i < config.fields.length; i++) {
-            const obj = {};
-            obj.view = "text";
-            obj.label = config.fields[i];
-            obj.name = config.fields[i];
-            config.rows.push(obj);
+            config.rows.push({view: "text", label: config.fields[i], name: config.fields[i]});
         };
         config.rows.push({cols: [
             {
@@ -127,8 +124,10 @@ webix.protoUI({
                 value: "Save",
                 css: "webix_primary",
                 click() {
-                    if($$(config.id).isDirty()) {
-                        $$(config.id).clear();
+                    const formId = $$(config.id);
+                    if(formId.isDirty()) {
+                        console.log(formId.getValues())
+                        formId.clear();
                     }
                 }
             },
@@ -140,7 +139,7 @@ webix.protoUI({
 const secondTask = {
     rows: [
         {
-            view: "myform",
+            view: "customForm",
             fields: ["Firstname","Lastname", "Address"],
             autowidth: true,
             rows: [],
