@@ -32,14 +32,14 @@ webix.protoUI({
         config.value = config.states[config.state];
         this.$view.className += " button_off";
         this.attachEvent("onItemClick", () => {
-            switch (this.getValue()) {
-                case "Off":
+            switch (this.config.state) {
+                case 0:
                     btnChange(1, "sort_asc", "off", this.config.id);
                     break;
-                case "Sort Asc":
+                case 1:
                     btnChange(2, "sort_desc", "sort_asc", this.config.id);
                     break;
-                case "Sort Desc":
+                case 2:
                     btnChange(0, "off", "sort_desc", this.config.id);
                     break;
             }
@@ -63,6 +63,27 @@ const firstTask = {
                 view: "label",
                 label: "Sort list",
                 autowidth: true
+            },
+            {
+                view: "mybutton",
+                width: 270,
+                states: { 0: "Off", 1: "Sort Asc", 2: "Sort Desc" },
+                state: 0,
+                on: {
+                    "onItemClick"() {
+                        switch (this.config.state) {
+                            case 0:
+                                sortData("#id#", "asc", "int");
+                                break;
+                            case 1:
+                                sortData("#name#", "asc", "string");
+                                break;
+                            case 2:
+                                sortData("#name#", "desc", "string");
+                                break;
+                        }
+                    }
+                }
             },
             {
                 view: "mybutton",
