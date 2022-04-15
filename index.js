@@ -13,37 +13,37 @@ const data = [
     { "id": 12, "name": "Tanya Krieg", "age": 28, "country": "Germany" }
 ]
 
-function changeBtnState(state, addClass, removeClass, id) {
-    const btn = $$(id);
-    btn.config.state = state;
-    const btnNode = btn.getNode();
-    webix.html.addCss(btnNode, `button_${addClass}`);
-    webix.html.removeCss(btnNode, `button_${removeClass}`);
-    btn.blur();
-    return btn.setValue(btn.config.states[btn.config.state]);
-}
-
 function sortDataInTable(key, dir, type) {
     return $$("table").sort(key, dir, type);
 }
 
 webix.protoUI({
     name: 'buttonStates',
+    changeBtnState(state, addClass, removeClass, id) {
+        const btn = $$(id);
+        btn.config.state = state;
+        const btnNode = btn.getNode();
+        webix.html.addCss(btnNode, `button_${addClass}`);
+        webix.html.removeCss(btnNode, `button_${removeClass}`);
+        btn.blur();
+        btn.setValue(btn.config.states[btn.config.state]);
+    },
     $init(config) {
         config.value = config.states[config.state];
         this.$view.className += " button_off";
         this.attachEvent("onItemClick", () => {
             switch (this.config.state) {
                 case 0:
-                    changeBtnState(1, "sort_asc", "off", this.config.id);
+                    this.changeBtnState(1, "sort_asc", "off", this.config.id);
                     break;
                 case 1:
-                    changeBtnState(2, "sort_desc", "sort_asc", this.config.id);
+                    this.changeBtnState(2, "sort_desc", "sort_asc", this.config.id);
                     break;
                 case 2:
-                    changeBtnState(0, "off", "sort_desc", this.config.id);
+                    this.changeBtnState(0, "off", "sort_desc", this.config.id);
                     break;
             }
+            this.callEvent("onStateChange", [this.config.state]);
         })
     }
 }, webix.ui.button)
@@ -71,8 +71,8 @@ const firstTask = {
                 states: { 0: "Off", 1: "Sort Asc", 2: "Sort Desc" },
                 state: 0,
                 on: {
-                    onItemClick() {
-                        switch (this.config.state) {
+                    onStateChange(state) {
+                        switch (state) {
                             case 0:
                                 sortDataInTable("#id#", "asc", "int");
                                 break;
@@ -106,37 +106,43 @@ const firstTask = {
 
 webix.protoUI({
     name: "generateFormFields",
+    cancelAction() {
+        this.clear();
+        return false;
+    },
+    saveAction() {
+        if (this.isDirty()) {
+            console.log(this.getValues())
+            this.clear();
+        }
+    },
     $init(config) {
-        for (let i = 0; i < config.fields.length; i++) {
+        if (config.fields) {
+            for (let i = 0; i < config.fields.length; i++) {
+                config.rows.push({
+                    view: "text",
+                    label: config.fields[i],
+                    name: config.fields[i]
+                });
+            };
             config.rows.push({
-                view: "text",
-                label: config.fields[i],
-                name: config.fields[i]
-            });
-        };
-        config.rows.push({
-            cols: [
-                {
-                    view: "button",
-                    value: "Cancel",
-                    click: () => {
-                        this.clear();
-                        return false;
-                    }
-                },
-                {
-                    view: "button",
-                    value: "Save",
-                    css: "webix_primary",
-                    click: ()=> {
-                        if (this.isDirty()) {
-                            console.log(this.getValues())
-                            this.clear();
-                        }
-                    }
-                },
-            ]
-        })
+                cols: [
+                    {
+                        view: "button",
+                        value: "Cancel",
+                        click: () => config.cancelAction ? config.cancelAction.call(this) : this.cancelAction()
+                    },
+                    {
+                        view: "button",
+                        value: "Save",
+                        css: "webix_primary",
+                        click: () => config.saveAction ? config.saveAction.call(this) : this.saveAction()
+                    },
+                ]
+            })
+        } else {
+            webix.message("Create a key 'fields' in the form!")
+        }
     }
 
 }, webix.ui.form)
@@ -146,7 +152,6 @@ const secondTask = {
         {
             view: "generateFormFields",
             fields: ["Firstname", "Lastname", "Address"],
-            autowidth: true,
             rows: [],
         },
     ],
