@@ -149,7 +149,7 @@ const secondTask = {
     rows: [
         {
             view: "generateFormFields",
-            // fields: ["Firstname", "Lastname", "Address"],
+            fields: ["Firstname", "Lastname", "Address"],
         },
     ],
     id: "second_task"
