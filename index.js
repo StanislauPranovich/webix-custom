@@ -19,14 +19,11 @@ function sortDataInTable(key, dir, type) {
 
 webix.protoUI({
     name: 'buttonStates',
-    changeBtnState(state, addClass, removeClass, id) {
-        const btn = $$(id);
-        btn.config.state = state;
-        const btnNode = btn.getNode();
-        webix.html.addCss(btnNode, `button_${addClass}`);
-        webix.html.removeCss(btnNode, `button_${removeClass}`);
-        btn.blur();
-        btn.setValue(btn.config.states[btn.config.state]);
+    changeBtnState(state, addClass, removeClass) {
+        this.config.state = state;
+        webix.html.addCss(this.$view, `button_${addClass}`);
+        webix.html.removeCss(this.$view, `button_${removeClass}`);
+        this.setValue(this.config.states[this.config.state]);
     },
     $init(config) {
         config.value = config.states[config.state];
@@ -34,13 +31,13 @@ webix.protoUI({
         this.attachEvent("onItemClick", () => {
             switch (this.config.state) {
                 case 0:
-                    this.changeBtnState(1, "sort_asc", "off", this.config.id);
+                    this.changeBtnState(1, "sort_asc", "off");
                     break;
                 case 1:
-                    this.changeBtnState(2, "sort_desc", "sort_asc", this.config.id);
+                    this.changeBtnState(2, "sort_desc", "sort_asc");
                     break;
                 case 2:
-                    this.changeBtnState(0, "off", "sort_desc", this.config.id);
+                    this.changeBtnState(0, "off", "sort_desc");
                     break;
             }
             this.callEvent("onStateChange", [this.config.state]);
@@ -117,6 +114,7 @@ webix.protoUI({
         }
     },
     $init(config) {
+        config.rows = [];
         if (config.fields) {
             for (let i = 0; i < config.fields.length; i++) {
                 config.rows.push({
@@ -151,8 +149,7 @@ const secondTask = {
     rows: [
         {
             view: "generateFormFields",
-            fields: ["Firstname", "Lastname", "Address"],
-            rows: [],
+            // fields: ["Firstname", "Lastname", "Address"],
         },
     ],
     id: "second_task"
