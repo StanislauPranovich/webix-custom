@@ -1,0 +1,18 @@
+.button_off .webix_button,
+.button_off .webix_button:hover,
+.button_off .webix_button:focus {
+    background-color: green;
+    color: black
+}
+
+.button_sort_asc .webix_button,
+.button_sort_asc .webix_button:focus {
+    background-color: orange;
+    color: black
+}
+
+.button_sort_desc .webix_button,
+.button_sort_desc .webix_button:focus {
+    background-color: red;
+    color: black
+}
